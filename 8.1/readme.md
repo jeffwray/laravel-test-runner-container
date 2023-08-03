@@ -7,19 +7,19 @@ Docker Container with PHP 8.1 and extensions to be compatible with most Laravel 
 **Build**:
 
 ```
-docker build --pull -t kirschbaumdevelopment/laravel-test-runner .
+docker build --pull -t jeffwray/laravel-test-runner .
 ```
 
 **Tag**:
 
 ```
-docker tag kirschbaumdevelopment/laravel-test-runner:latest kirschbaumdevelopment/laravel-test-runner:8.1
+docker tag jeffwray/laravel-test-runner:latest jeffwray/laravel-test-runner:8.1
 ```
 
 **Push**:
 
 ```
-docker push kirschbaumdevelopment/laravel-test-runner:8.1
+docker push jeffwray/laravel-test-runner:8.1
 ```
 
 ## Credits
@@ -28,4 +28,4 @@ docker push kirschbaumdevelopment/laravel-test-runner:8.1
 
 ## Sponsorship
 
-Development of this package is sponsored by Kirschbaum Development Group, a developer driven company focused on problem solving, team building, and community. Learn more [about us](https://kirschbaumdevelopment.com) or [join us](https://careers.kirschbaumdevelopment.com)!
+Development of this package is sponsored by Kirschbaum Development Group, a developer driven company focused on problem solving, team building, and community. Learn more [about us](https://jeffwray.com) or [join us](https://careers.jeffwray.com)!
