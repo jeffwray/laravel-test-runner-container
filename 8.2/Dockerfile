@@ -52,6 +52,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # mysql client
 RUN apt-get install -y mysql-client
 
+# Install PostgreSQL client
+RUN apt-get install -y postgresql-client
+
 # git
 RUN apt-get install -y git
 
