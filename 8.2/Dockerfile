@@ -46,7 +46,7 @@ RUN apt-get install -y docker-ce docker-ce-cli containerd.io
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add
 RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 RUN apt-get update
-RUN apt-get install -y libnss3-dev google-chrome-stable
+RUN apt-get install -y libnss3-dev libnss3 google-chrome-stable
 RUN google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 --no-sandbox http://localhost &
 
 
