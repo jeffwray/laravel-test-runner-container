@@ -42,6 +42,13 @@ RUN chmod a+r /etc/apt/keyrings/docker.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 RUN apt-get update
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io
+# Install dusk requirements
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add
+RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+RUN apt-get update
+RUN apt-get install -y libnss3-dev google-chrome-stable
+RUN google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 --no-sandbox http://localhost &
+
 
 # composer
 ENV COMPOSER_HOME=/composer
