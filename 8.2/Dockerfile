@@ -78,3 +78,9 @@ RUN composer global require laravel/vapor-cli
 
 # goss
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v${GOSS_VERSION} sh
+
+# Install AWS CLI v2
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws
