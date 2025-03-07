@@ -4,10 +4,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GOSS_VERSION="0.3.6"
 
-RUN apt-get update && apt-get install -y software-properties-common curl
+# Install basic utilities and dependencies
+RUN apt-get update && apt-get install -y software-properties-common curl wget
 RUN add-apt-repository ppa:ondrej/php -y
 RUN add-apt-repository ppa:git-core/ppa -y
 RUN apt-get update -y
+
+# Install PHP 8.1 and required extensions
 RUN apt-get install -y \
     unzip \
     php8.1-cli \
@@ -28,14 +31,19 @@ RUN apt-get install -y \
     php8.1-imap \
     php8.1-phpdbg \
     php8.1-bz2 \
-    php8.1-redis\
+    php8.1-redis \
     php8.1-imagick \
     curl \
     ca-certificates \
     gnupg \
     lsb-release
-RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash -
+
+# Install latest stable Node.js & npm
+RUN curl -fsSL https://deb.nodesource.com/setup_current.x | bash -
 RUN apt-get install -y nodejs
+RUN npm install -g npm@latest yarn
+
+# Install Docker CLI
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 RUN chmod a+r /etc/apt/keyrings/docker.gpg
@@ -43,23 +51,20 @@ RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/doc
 RUN apt-get update
 RUN apt-get install -y docker-ce docker-ce-cli containerd.io
 
-# composer
+# Install Composer
 ENV COMPOSER_HOME=/composer
 ENV PATH=./vendor/bin:/composer/vendor/bin:/root/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# mysql client
-RUN apt-get install -y mysql-client
+# Install MySQL & PostgreSQL clients
+RUN apt-get install -y mysql-client postgresql-client
 
-# git
+# Install Git
 RUN apt-get install -y git
 
-# node and yarn
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install -g yarn
+# Install Laravel Vapor CLI
 RUN composer global require laravel/vapor-cli
 
-# goss
+# Install Goss for testing
 RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v${GOSS_VERSION} sh
