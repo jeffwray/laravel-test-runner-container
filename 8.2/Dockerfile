@@ -33,54 +33,43 @@ RUN apt-get install -y \
     curl \
     ca-certificates \
     gnupg \
-    lsb-release
-RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash -
+    lsb-release \
+    git-lfs \
+    mysql-client \
+    postgresql-client
+
+# Node.js & Yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
+RUN npm install -g npm@latest yarn
+
+# Laravel Vapor CLI
+RUN composer global require laravel/vapor-cli
+
+# Install Docker CLI
 RUN mkdir -p /etc/apt/keyrings
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 RUN chmod a+r /etc/apt/keyrings/docker.gpg
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-RUN apt-get update
-RUN apt-get install -y docker-ce docker-ce-cli containerd.io
+RUN apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io
 
-
-# Download and add the Google Chrome signing key
+# Install Google Chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-
-# Add the Google Chrome repository
 RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list
-
-# Update apt and install Google Chrome Stable along with libnss3-dev
 RUN apt-get update && apt-get install -y google-chrome-stable libnss3-dev libnss3
 RUN google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 --no-sandbox http://localhost &
 
-
-# composer
+# Composer
 ENV COMPOSER_HOME=/composer
 ENV PATH=./vendor/bin:/composer/vendor/bin:/root/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# mysql client
-RUN apt-get install -y mysql-client
-
-# Install PostgreSQL client
-RUN apt-get install -y postgresql-client
-
-# git
-RUN apt-get install -y git
-
-# node and yarn
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install -g yarn
-RUN composer global require laravel/vapor-cli
-
-# goss
-RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v${GOSS_VERSION} sh
 
 # Install AWS CLI v2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws
+
+# Install Goss
+RUN curl -fsSL https://goss.rocks/install | GOSS_VER=v${GOSS_VERSION} sh
